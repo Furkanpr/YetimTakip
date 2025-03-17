@@ -2,23 +2,28 @@
   import { auth } from "../firebase";
   import { createUserWithEmailAndPassword } from "firebase/auth";
   import { navigate } from "svelte-routing";
+  import { Link } from "svelte-routing";
   
   let email = "";
   let password = "";
   let confirmPassword = "";
   let error = "";
+  let loading = false;
   
   async function handleRegister() {
     try {
+      loading = true;
       error = "";
       if (password !== confirmPassword) {
         error = "Şifreler eşleşmiyor";
         return;
       }
       await createUserWithEmailAndPassword(auth, email, password);
-      navigate("/dashboard");
+      navigate("/admin");
     } catch (e) {
       error = "Kayıt olurken bir hata oluştu: " + e.message;
+    } finally {
+      loading = false;
     }
   }
 </script>
@@ -82,15 +87,32 @@
       <div>
         <button
           type="submit"
-          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
+          disabled={loading}
+          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200 disabled:opacity-50"
         >
-          <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-            <svg class="h-5 w-5 text-green-500 group-hover:text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
-            </svg>
-          </span>
-          Kayıt Ol
+          {#if loading}
+            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+              <div class="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+            </span>
+            Kayıt Yapılıyor...
+          {:else}
+            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+              <svg class="h-5 w-5 text-green-500 group-hover:text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+              </svg>
+            </span>
+            Kayıt Ol
+          {/if}
         </button>
+      </div>
+
+      <div class="text-center">
+        <p class="text-sm text-gray-600">
+          Zaten hesabınız var mı?
+          <Link to="/login" class="font-medium text-green-600 hover:text-green-500">
+            Giriş Yapın
+          </Link>
+        </p>
       </div>
     </form>
   </div>

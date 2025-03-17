@@ -2,22 +2,23 @@
   import { auth } from "../firebase";
   import { signInWithEmailAndPassword } from "firebase/auth";
   import { navigate } from "svelte-routing";
+  import { Link } from "svelte-routing";
   
   let email = "";
   let password = "";
   let error = "";
+  let loading = false;
   
   async function handleLogin() {
     try {
+      loading = true;
       error = "";
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      if (userCredential.user.email.includes("admin")) {
-        navigate("/admin");
-      } else {
-        navigate("/dashboard");
-      }
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/admin");
     } catch (e) {
       error = "Giriş yapılırken bir hata oluştu: " + e.message;
+    } finally {
+      loading = false;
     }
   }
 </script>
@@ -69,15 +70,32 @@
       <div>
         <button
           type="submit"
-          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
+          disabled={loading}
+          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200 disabled:opacity-50"
         >
-          <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-            <svg class="h-5 w-5 text-green-500 group-hover:text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-            </svg>
-          </span>
-          Giriş Yap
+          {#if loading}
+            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+              <div class="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+            </span>
+            Giriş Yapılıyor...
+          {:else}
+            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+              <svg class="h-5 w-5 text-green-500 group-hover:text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+              </svg>
+            </span>
+            Giriş Yap
+          {/if}
         </button>
+      </div>
+
+      <div class="text-center">
+        <p class="text-sm text-gray-600">
+          Hesabınız yok mu?
+          <Link to="/register" class="font-medium text-green-600 hover:text-green-500">
+            Kayıt Olun
+          </Link>
+        </p>
       </div>
     </form>
   </div>
