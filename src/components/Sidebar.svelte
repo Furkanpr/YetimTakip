@@ -56,4 +56,22 @@
       <span class="{sidebarOpen ? 'ml-3' : 'hidden'}">Yeni Yetim Ekle</span>
     </button>
   </nav>
-</div> 
+  <div class="mt-auto ">
+    <button
+      class="w-full flex items-center px-4 py-3 hover:bg-green-700"
+      on:click={() => {
+        if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
+          window.location.href = '/'; // Çıkış yap, yönlendir
+        }
+      }}
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7" />
+      </svg>
+      <span class="{sidebarOpen ? 'ml-3' : 'hidden'}">Çıkış Yap</span>
+    </button>
+  </div>
+
+</div>
+  
+

@@ -7,6 +7,7 @@
   import Login from "./routes/Login.svelte";
   import Register from "./routes/Register.svelte";
   import AdminPanel from "./routes/AdminPanel.svelte";
+  import Donate from "./routes/Donate.svelte";
   
   export let url = "";
   let user = null;
@@ -35,6 +36,7 @@
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <Route path="/admin" component={AdminPanel} />
+      <Route path="/donate" component={Donate} />
     </main>
   {/if}
 </Router> 

@@ -1,102 +1,75 @@
 <script>
-  import { auth } from "../firebase";
   import { signInWithEmailAndPassword } from "firebase/auth";
+  import { auth } from "../firebase";
   import { navigate } from "svelte-routing";
-  import { Link } from "svelte-routing";
-  
+  import Header from "../components/Header.svelte";
+
   let email = "";
   let password = "";
   let error = "";
   let loading = false;
-  
+
   async function handleLogin() {
+    loading = true;
     try {
-      loading = true;
-      error = "";
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/admin");
-    } catch (e) {
-      error = "Giriş yapılırken bir hata oluştu: " + e.message;
+    } catch (err) {
+      error = "Giriş sırasında bir hata oluştu: " + err.message;
     } finally {
       loading = false;
     }
   }
 </script>
 
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-b from-green-100 to-green-200 py-12 px-4 sm:px-6 lg:px-8">
+<Header />
+
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
   <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-xl">
     <div>
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-green-800">
-        Hesabınıza Giriş Yapın
-      </h2>
-      <p class="mt-2 text-center text-sm text-green-600">
-        Yetim çocuklarımızı takip etmek için giriş yapın
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Giriş Yap</h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        Henüz bir hesabınız yok mu?
+        <a href="/register" class="font-medium text-indigo-600 hover:text-indigo-500">Kayıt Ol</a>
       </p>
     </div>
     <form class="mt-8 space-y-6" on:submit|preventDefault={handleLogin}>
       <div class="rounded-md shadow-sm -space-y-px">
         <div>
-          <label for="email" class="sr-only">E-posta</label>
-          <input
-            bind:value={email}
-            id="email"
-            name="email"
-            type="email"
-            required
-            class="appearance-none rounded-t-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
-            placeholder="E-posta adresi"
-          />
+          <label for="email-address" class="sr-only">Email adresi</label>
+          <input id="email-address" name="email" type="email" autocomplete="email" required bind:value={email} class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email adresi" />
         </div>
         <div>
           <label for="password" class="sr-only">Şifre</label>
-          <input
-            bind:value={password}
-            id="password"
-            name="password"
-            type="password"
-            required
-            class="appearance-none rounded-b-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
-            placeholder="Şifre"
-          />
+          <input id="password" name="password" type="password" autocomplete="current-password" required bind:value={password} class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Şifre" />
         </div>
       </div>
 
-      {#if error}
-        <div class="bg-red-50 border-l-4 border-red-400 p-4">
-          <p class="text-red-700 text-sm">{error}</p>
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+          <label for="remember-me" class="ml-2 block text-sm text-gray-900">Beni Hatırla</label>
         </div>
-      {/if}
+
+        <div class="text-sm">
+          <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Şifrenizi mi unuttunuz?</a>
+        </div>
+      </div>
 
       <div>
-        <button
-          type="submit"
-          disabled={loading}
-          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200 disabled:opacity-50"
-        >
+        <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" disabled={loading}>
           {#if loading}
-            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-              <div class="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
-            </span>
-            Giriş Yapılıyor...
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <span class="sr-only">Yükleniyor...</span>
           {:else}
-            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-              <svg class="h-5 w-5 text-green-500 group-hover:text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-              </svg>
-            </span>
             Giriş Yap
           {/if}
         </button>
       </div>
 
-      <div class="text-center">
-        <p class="text-sm text-gray-600">
-          Hesabınız yok mu?
-          <Link to="/register" class="font-medium text-green-600 hover:text-green-500">
-            Kayıt Olun
-          </Link>
-        </p>
-      </div>
+      {#if error}
+        <div class="text-red-500 text-sm mt-2">{error}</div>
+      {/if}
     </form>
   </div>
 </div> 

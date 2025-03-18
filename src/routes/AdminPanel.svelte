@@ -5,7 +5,6 @@
   import { signOut } from "firebase/auth";
   import { navigate } from "svelte-routing";
   import Sidebar from "../components/Sidebar.svelte";
-  import Header from "../components/Header.svelte";
   
   let activeTab = "dashboard";
   let yetimler = [];
@@ -123,7 +122,6 @@
   <Sidebar bind:activeTab bind:sidebarOpen />
 
   <div class="flex-1 flex flex-col overflow-hidden">
-    <Header />
 
     <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
       <!-- İstatistik Kartları -->
