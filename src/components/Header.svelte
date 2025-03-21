@@ -20,7 +20,7 @@
     <div class="flex items-center justify-between h-20">
       <div class="flex items-center">
         <Link to="/" class="flex items-center">
-          <img src="public/yetimLogo.png" alt="Logo" class="h-16 w-auto rounded-full mr-4">
+          <img src="/yetimLogo.png" alt="Logo" class="h-16 w-auto rounded-full mr-4">
           <span class="text-2xl font-bold text-gray-800">Yetim Takip</span>
         </Link>
       </div>

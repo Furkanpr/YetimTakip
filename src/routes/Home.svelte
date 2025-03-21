@@ -196,7 +196,7 @@
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div class="col-span-2">
           <div class="flex items-center">
-            <img src="public/yetimLogoWeb.png" alt="Logo" class="h-12 w-auto mr-3">
+            <img src="/yetimLogoWeb.png" alt="Logo" class="h-12 w-auto mr-3">
             <span class="text-xl font-bold">Yetim Takip</span>
           </div>
           <p class="mt-4 text-gray-300 max-w-md">
